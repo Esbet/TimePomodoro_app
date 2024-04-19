@@ -8,6 +8,8 @@ import 'package:timepomodoro_app/core/theme/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:timepomodoro_app/core/theme/fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:timepomodoro_app/core/utils/contants.dart';
+import 'package:timepomodoro_app/features/time/presentation/widgets/option_button.dart';
 import '../../../../core/widgets/simple_loading.dart';
 import '../../../../injection_container.dart';
 import '../bloc/time_bloc.dart';
@@ -27,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   final Stopwatch _stopwatch = Stopwatch();
   Timer _timer = Timer(const Duration(seconds: 0), () {});
-  String _elapsedTime = '25:00';
+  String _elapsedTime = Constants.pomodoro;
   int _selectedButtonIndex = 0;
   String name = '';
 
@@ -56,6 +58,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _timer.cancel();
     _stopwatch.stop();
+    _player.dispose();
     super.dispose();
   }
 
@@ -109,74 +112,58 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 5.h,
           ),
-       SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Container(
-      decoration: BoxDecoration(
-        color: lightGrayColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _selectedButtonIndex = 0;
-                  _elapsedTime = "25:00";
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
-                backgroundColor: _selectedButtonIndex == 0 ? pinkColor : grayColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              decoration: BoxDecoration(
+                color: lightGrayColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OptionButton(
+                      index: 0,
+                      indexSelected: _selectedButtonIndex,
+                      label: l10n.pomodoro,
+                      onPressed: () {
+                        setState(() {
+                          _selectedButtonIndex = 0;
+                          _elapsedTime =Constants.pomodoro;
+                        });
+                      },
+                    ),
+                    SizedBox(width: 2.w,),
+                    OptionButton(
+                      index: 1,
+                      indexSelected: _selectedButtonIndex,
+                      label: l10n.shortBreak,
+                      onPressed: () {
+                        setState(() {
+                          _selectedButtonIndex = 1;
+                          _elapsedTime = Constants.shortBreak;
+                        });
+                      },
+                    ),
+                    SizedBox(width: 2.w,),
+                    OptionButton(
+                      index: 2,
+                      indexSelected: _selectedButtonIndex,
+                      label: l10n.longBreak,
+                      onPressed: () {
+                        setState(() {
+                          _selectedButtonIndex = 2;
+                          _elapsedTime =Constants.longBreak;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ),
-              child: Text(l10n.pomodoro, style: _selectedButtonIndex == 0 ? textBlackStyleSmall:textWhiteStyle),
             ),
-            SizedBox(width: 10), 
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _selectedButtonIndex = 1;
-                  _elapsedTime = "05:00";
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
-                backgroundColor: _selectedButtonIndex == 1 ? pinkColor : grayColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(l10n.shortBreak,  style: _selectedButtonIndex == 1 ? textBlackStyleSmall:textWhiteStyle),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _selectedButtonIndex = 2;
-                  _elapsedTime = "15:00";
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                backgroundColor: _selectedButtonIndex == 2 ? pinkColor : grayColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(l10n.longBreak,  style: _selectedButtonIndex == 2 ? textBlackStyleSmall:textWhiteStyle),
-            ),
-          ],
-        ),
-      ),
-        ),
-      ),
-      
-      
+          ),
           SizedBox(
             height: 6.h,
           ),
@@ -211,7 +198,9 @@ class _HomePageState extends State<HomePage> {
           Text(
             _stopwatch.isRunning
                 ? l10n.stop
-                : (_stopwatch.elapsed.inSeconds == 0 ? l10n.start : l10n.resume),
+                : (_stopwatch.elapsed.inSeconds == 0
+                    ? l10n.start
+                    : l10n.resume),
             style: textWhiteStyleTitle,
           )
         ],
@@ -222,9 +211,9 @@ class _HomePageState extends State<HomePage> {
   void _updateTime(Timer timer) {
     if (_stopwatch.isRunning) {
       final Map<int, Map<String, int>> buttonData = {
-        0: {'time': 1500, 'totalMinutes': 25},
-        1: {'time': 300, 'totalMinutes': 5},
-        2: {'time': 900, 'totalMinutes': 15},
+        0: {'time': Constants.pomodoroSec, 'totalMinutes':  Constants.pomodoroMin},
+        1: {'time': Constants.shortBreakSec, 'totalMinutes':  Constants.shortBreakMin},
+        2: {'time':Constants.longBreakSec, 'totalMinutes': Constants.longBreakMin},
       };
 
       setState(() {
@@ -242,7 +231,7 @@ class _HomePageState extends State<HomePage> {
           _elapsedTime =
               '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
           if (_elapsedTime == "00:01") {
-             _player.play(AssetSource(alarmMp3)); 
+            _player.play(AssetSource(alarmMp3));
             DateTime now = DateTime.now();
             String formattedDate = DateFormat('dd/MM/yyyy').format(now);
             if (_selectedButtonIndex == 0) {

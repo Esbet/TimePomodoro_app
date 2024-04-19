@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   int totMinutesToday = 0;
   int totPomodorosToday = 0;
 
-  UserEntity user= const UserEntity.empty();
+  UserEntity user = const UserEntity.empty();
 
   int totMinutes = 0;
   int totPomodoros = 0;
@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
       const GetTotalPomodorosEvent(),
     );
 
-      timeBloc.add(
+    timeBloc.add(
       const GetTotalBreaksEvent(),
     );
 
@@ -89,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   if (state is GetTotalBreaksState) {
                     setState(() {
-                      totBreaks = state.time ;
+                      totBreaks = state.time;
                     });
                   }
 
@@ -134,19 +134,19 @@ class _ProfilePageState extends State<ProfilePage> {
             SvgPicture.asset(
               profileSVG,
               height: 20.h,
-
             ),
             Container(
               width: 100,
               height: 100,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: whiteColor, 
+                color: whiteColor,
               ),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Text(user.name!=""? user.name.substring(0,1): "", style: textBlackStyleTitle),
+                  Text(user.name != "" ? user.name.substring(0, 1) : "",
+                      style: textBlackStyleTitle),
                 ],
               ),
             ),
