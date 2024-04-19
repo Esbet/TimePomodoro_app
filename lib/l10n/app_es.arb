@@ -1,0 +1,20 @@
+{
+    "user":"Usuario",
+    "email":"Correo",
+    "register":"Regístro",
+    "pomodoro":"Pomodoro",
+    "shortBreak":"Descanso Corto",
+    "longBreak":"Descanso Largo",
+    "start":"Empezar",
+    "profile":"Perfil",
+    "todayFocus":"Enfoque de hoy",
+    "minutes":"Minutos",
+    "allFocus":"Enfoques Totales",
+    "totalBreaks":"Descansos Totales",
+    "takingBreaks":"Tomar un descanso es bueno para ti",
+    "hi":"Hola",
+    "requiredField":"Campo requerido",
+    "loginEmailError" : "El correo es incorrecto",
+    "stop":"Detener",
+    "resume":"Continuar"
+}

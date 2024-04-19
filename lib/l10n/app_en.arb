@@ -1,0 +1,20 @@
+{
+    "user":"User",
+    "email":"Email",
+    "register":"Register",
+    "pomodoro":"Pomodoro",
+    "shortBreak":"Short Break",
+    "longBreak":"Long Break",
+    "start":"Start",
+    "profile":"Profile",
+    "todayFocus":"Today Focus",
+    "minutes":"Minutes",
+    "allFocus":"All Focus",
+    "totalBreaks":"Total Breaks",
+    "takingBreaks":"Taking breaks are good for you",
+    "hi":"Hi",
+    "requiredField":"Required field",
+    "loginEmailError" : "The email is incorrect",
+    "stop":"Stop",
+    "resume":"Resume"
+}
