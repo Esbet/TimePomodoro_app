@@ -3,6 +3,13 @@ TimePomodoro is an application that applies this technique to improve productivi
 
 ## Getting Started
 
+#Run Project
+Console
+1. flutter pub get
+2. flutter gen-l10n
+
+Note: If your device or emulator is configured in Spanish, the app texts will appear in Spanish, the same for the English language.
+
 This project was created using the clean architecture and the Bloc pattern.
 
 1. Clean Architecture:
