@@ -98,7 +98,7 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
     required InsertPomodoroTimeEvent event,
     required Emitter<TimeState> emit,
   }) async {
-    // emit(const LoadiState(isLoading: true));
+     emit(const LoadingPomodoroState(isLoading: true));
     final result = await insertPomodoroTimeUseCase(
         ParamsUseCaseInsertPomodoroTime(
             date: event.date, minutes: event.minutes));
@@ -106,10 +106,10 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
       emit(FailedPomodoroTimeState(
         message: failure.props.isNotEmpty ? failure.props.first.toString() : '',
       ));
-      //  emit(const LoadingStep2State(isLoading:false));
+      emit(const LoadingPomodoroState(isLoading: false));
       return const InsertPomodoroTimeState(isSaved: false);
     }, (resp) {
-      // emit(const LoadingStep2State(isLoading: false));
+      emit(const LoadingPomodoroState(isLoading: false));
       return InsertPomodoroTimeState(isSaved: resp.result);
     });
   }
@@ -118,16 +118,13 @@ class TimeBloc extends Bloc<TimeEvent, TimeState> {
     required GetUserEvent event,
     required Emitter<TimeState> emit,
   }) async {
-    // emit(const LoadiState(isLoading: true));
     final result = await getUserUseCase(NoParams());
     return result.fold((failure) {
       emit(FailedPomodoroTimeState(
         message: failure.props.isNotEmpty ? failure.props.first.toString() : '',
       ));
-      //  emit(const LoadingStep2State(isLoading:false));
       return const GetUserState(user: UserEntity.empty());
     }, (resp) {
-      // emit(const LoadingStep2State(isLoading: false));
       return GetUserState(user: resp.result);
     });
   }

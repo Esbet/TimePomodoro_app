@@ -10,6 +10,7 @@ import 'package:timepomodoro_app/core/theme/fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:timepomodoro_app/core/utils/contants.dart';
 import 'package:timepomodoro_app/features/time/presentation/widgets/option_button.dart';
+import '../../../../core/utils/keys.dart';
 import '../../../../core/widgets/simple_loading.dart';
 import '../../../../injection_container.dart';
 import '../bloc/time_bloc.dart';
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   AudioPlayer _player = AudioPlayer();
   bool _isLoading = false;
   final Stopwatch _stopwatch = Stopwatch();
-  Timer _timer = Timer(const Duration(seconds: 0), () {});
+  Timer? _timer;
   String _elapsedTime = Constants.pomodoro;
   int _selectedButtonIndex = 0;
   String name = '';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   void _startStopwatch() {
     if (_stopwatch.isRunning) {
       _stopwatch.stop();
-      _timer.cancel();
+      _timer?.cancel();
     } else {
       _stopwatch.start();
       _timer = Timer.periodic(const Duration(seconds: 1), _updateTime);
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     _stopwatch.stop();
     _player.dispose();
     super.dispose();
@@ -125,18 +126,25 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     OptionButton(
+                      key: Keys.pomodoroButton,
                       index: 0,
                       indexSelected: _selectedButtonIndex,
                       label: l10n.pomodoro,
                       onPressed: () {
                         setState(() {
                           _selectedButtonIndex = 0;
-                          _elapsedTime =Constants.pomodoro;
+                          _elapsedTime = Constants.pomodoro;
+                          _stopwatch.stop();
+                          _stopwatch.reset();
+                          _timer?.cancel();
                         });
                       },
                     ),
-                    SizedBox(width: 2.w,),
+                    SizedBox(
+                      width: 2.w,
+                    ),
                     OptionButton(
+                      key: Keys.shortBreakButton,
                       index: 1,
                       indexSelected: _selectedButtonIndex,
                       label: l10n.shortBreak,
@@ -144,18 +152,27 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           _selectedButtonIndex = 1;
                           _elapsedTime = Constants.shortBreak;
+                           _stopwatch.stop();
+                          _stopwatch.reset();
+                          _timer?.cancel();
                         });
                       },
                     ),
-                    SizedBox(width: 2.w,),
+                    SizedBox(
+                      width: 2.w,
+                    ),
                     OptionButton(
+                      key: Keys.longBreakButton,
                       index: 2,
                       indexSelected: _selectedButtonIndex,
                       label: l10n.longBreak,
                       onPressed: () {
                         setState(() {
                           _selectedButtonIndex = 2;
-                          _elapsedTime =Constants.longBreak;
+                          _elapsedTime = Constants.longBreak;
+                          _stopwatch.stop();
+                          _stopwatch.reset();
+                          _timer?.cancel();
                         });
                       },
                     ),
@@ -175,6 +192,7 @@ class _HomePageState extends State<HomePage> {
             height: 8.h,
           ),
           GestureDetector(
+            key: Keys.initButton,
             onTap: () {
               _startStopwatch();
             },
@@ -209,11 +227,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _updateTime(Timer timer) {
-    if (_stopwatch.isRunning) {
+    if (mounted && _stopwatch.isRunning) {
       final Map<int, Map<String, int>> buttonData = {
-        0: {'time': Constants.pomodoroSec, 'totalMinutes':  Constants.pomodoroMin},
-        1: {'time': Constants.shortBreakSec, 'totalMinutes':  Constants.shortBreakMin},
-        2: {'time':Constants.longBreakSec, 'totalMinutes': Constants.longBreakMin},
+        0: {
+          'time': Constants.pomodoroSec,
+          'totalMinutes': Constants.pomodoroMin
+        },
+        1: {
+          'time': Constants.shortBreakSec,
+          'totalMinutes': Constants.shortBreakMin
+        },
+        2: {
+          'time': Constants.longBreakSec,
+          'totalMinutes': Constants.longBreakMin
+        },
       };
 
       setState(() {
@@ -224,6 +251,7 @@ class _HomePageState extends State<HomePage> {
 
         if (_stopwatch.elapsed.inSeconds >= time) {
           _stopwatch.stop();
+          _timer?.cancel();
         } else {
           int remainingSeconds = time - _stopwatch.elapsed.inSeconds;
           int minutes = remainingSeconds ~/ 60;
@@ -244,6 +272,7 @@ class _HomePageState extends State<HomePage> {
                 InsertBreakTimeEvent(date: formattedDate, minutes: totMinutes),
               );
             }
+            _timer?.cancel();
           }
         }
       });

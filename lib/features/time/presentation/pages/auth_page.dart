@@ -9,6 +9,7 @@ import '../../../../core/components/custom_text_register_input.dart';
 import '../../../../core/components/primary_button.dart';
 import '../../../../core/routes/resource_icons.dart';
 import '../../../../core/theme/fonts.dart';
+import '../../../../core/utils/keys.dart';
 import '../../../../core/widgets/simple_loading.dart';
 import '../../../../injection_container.dart';
 import '../bloc/time_bloc.dart';
@@ -26,7 +27,6 @@ class _AuthPageState extends State<AuthPage> {
   bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: blackColor,
       body: SafeArea(
@@ -44,7 +44,8 @@ class _AuthPageState extends State<AuthPage> {
 
                 if (state is InsertUserState) {
                   if (state.isSaved) {
-                      Navigator.pushReplacementNamed(context, MenuBottomPage.routeName);
+                    Navigator.pushReplacementNamed(
+                        context, MenuBottomPage.routeName);
                   }
                 }
               }, builder: (context, state) {
@@ -62,7 +63,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Column _principalBody(BuildContext context) {
-     AppLocalizations l10n = AppLocalizations.of(context)!;
+    AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         SizedBox(
@@ -81,10 +82,11 @@ class _AuthPageState extends State<AuthPage> {
             stream: timeBloc.nameStream,
             builder: (context, snapshot) {
               return CustomTextRegisterInput(
+                key: Keys.inputName,
                 placeholder: l10n.user,
                 keyboardType: TextInputType.text,
                 onChanged: (text) {
-                  timeBloc.setName(text,l10n);
+                  timeBloc.setName(text, l10n);
                 },
                 errorText: snapshot.hasError ? snapshot.error.toString() : null,
               );
@@ -97,6 +99,7 @@ class _AuthPageState extends State<AuthPage> {
             builder: (context, snapshot) {
               return CustomTextRegisterInput(
                 placeholder: l10n.email,
+                key: Keys.inputEmail,
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (text) {
                   timeBloc.setEmail(text, l10n);
@@ -111,6 +114,7 @@ class _AuthPageState extends State<AuthPage> {
             stream: timeBloc.validateAuthForm,
             builder: (context, snapshot) {
               return PrimaryButton(
+                key: Keys.registerButton,
                 onPressed: snapshot.hasData
                     ? () {
                         timeBloc.add(const InsertUserEvent());

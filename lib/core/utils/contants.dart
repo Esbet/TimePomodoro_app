@@ -10,4 +10,7 @@ class Constants {
   static const int pomodoroMin = 25;
   static const int shortBreakMin = 5;
   static const int longBreakMin = 15;
+
+
+
 }
