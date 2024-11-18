@@ -12,8 +12,6 @@ const colorScheme = ColorScheme(
   onSecondary: blackColor,
   error: blackColor,
   onError: blackColor,
-  background: whiteColor,
-  onBackground: outlineGrayColor,
   surface: whiteColor,
   onSurface: outlineGrayColor,
 );

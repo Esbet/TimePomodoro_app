@@ -3,6 +3,10 @@ TimePomodoro is an application that applies this technique to improve productivi
 
 ## Getting Started
 
+## Flutter Version 
+Flutter 3.24.5
+Dart 3.5.4
+
 #Run Project
 Console
 1. flutter pub get
